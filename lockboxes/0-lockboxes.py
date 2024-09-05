@@ -7,7 +7,10 @@
     that determines if all lockboxes can be opened
 
 """
+
+
 def canUnlockAll(boxes):
+    
     """
         Determines if boxes can be opened
     """
