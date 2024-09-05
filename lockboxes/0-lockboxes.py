@@ -10,11 +10,11 @@
 
 
 def canUnlockAll(boxes):
-    
+
     """
         Determines if boxes can be opened
     """
-    
+
     n = len(boxes)
     unlocked = [False] * n  # Track the unlocked boxes
     unlocked[0] = True  # The first box is initially unlocked
