@@ -10,6 +10,7 @@
 void swap_values(binary_tree_t *a, binary_tree_t *b)
 {
 	int temp = a->n;
+
 	a->n = b->n;
 	b->n = temp;
 }
@@ -30,7 +31,7 @@ heap_t *insert_node(heap_t *root, heap_t *new)
 
 	if (!root)
 	return (NULL);
-	
+
 	queue[rear++] = root;
 
 	while (front < rear)
@@ -52,15 +53,15 @@ heap_t *insert_node(heap_t *root, heap_t *new)
 				return (current);
 			}
 		}
-		
+
 		if (current->left)
 		queue[rear++] = current->left;
-		
+
 		if (current->right)
 		queue[rear++] = current->right;
-    }
+	}
 
-    return (NULL);
+	return (NULL);
 }
 
 /**
@@ -72,30 +73,30 @@ heap_t *insert_node(heap_t *root, heap_t *new)
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-    heap_t *new = binary_tree_node(NULL, value);
-    heap_t *parent;
+	heap_t *new = binary_tree_node(NULL, value);
+	heap_t *parent;
 
-    if (!root || !new)
-        return (NULL);
+	if (!root || !new)
+	return (NULL);
+	
+	if (!*root)
+	{
+		*root = new;
+		return (new);
+	}
 
-    if (!*root)
+	parent = insert_node(*root, new);
+	if (!parent)
+	{
+		free(new);
+		return (NULL);
+	}
+
+	while (new->parent && new->n > new->parent->n)
     {
-        *root = new;
-        return (new);
-    }
+		swap_values(new, new->parent);
+		new = new->parent;
+		}
 
-    parent = insert_node(*root, new);
-    if (!parent)
-    {
-        free(new);
-        return (NULL);
-    }
-
-    while (new->parent && new->n > new->parent->n)
-    {
-        swap_values(new, new->parent);
-        new = new->parent;
-    }
-
-    return (new);
+	return (new);
 }
