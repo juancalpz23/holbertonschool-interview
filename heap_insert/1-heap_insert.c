@@ -46,7 +46,7 @@ heap_t *insert_node(heap_t *root, heap_t *new)
 				new->parent = current;
 				return (current);
 			}
-            else
+		else
 			{
 				current->right = new;
 				new->parent = current;
@@ -78,7 +78,7 @@ heap_t *heap_insert(heap_t **root, int value)
 
 	if (!root || !new)
 	return (NULL);
-	
+
 	if (!*root)
 	{
 		*root = new;
@@ -93,10 +93,10 @@ heap_t *heap_insert(heap_t **root, int value)
 	}
 
 	while (new->parent && new->n > new->parent->n)
-    {
+	{
 		swap_values(new, new->parent);
 		new = new->parent;
-		}
+	}
 
 	return (new);
 }
