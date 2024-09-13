@@ -47,6 +47,7 @@ heap_t *insert_node(heap_t **root, int value)
     binary_tree_t *parent = NULL;
     binary_tree_t *queue[1024];
     int front = 0, rear = 0;
+    int i;
 
     if (*root == NULL)
     {
