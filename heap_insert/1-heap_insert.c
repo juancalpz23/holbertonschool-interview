@@ -9,9 +9,9 @@
  */
 void swap_values(binary_tree_t *a, binary_tree_t *b)
 {
-    int temp = a->n;
-    a->n = b->n;
-    b->n = temp;
+	int temp = a->n;
+	a->n = b->n;
+	b->n = temp;
 }
 
 /**
@@ -23,41 +23,41 @@ void swap_values(binary_tree_t *a, binary_tree_t *b)
  */
 heap_t *insert_node(heap_t *root, heap_t *new)
 {
-    binary_tree_t *queue[1024];
-    int front = 0;
-    int rear = 0;
-    binary_tree_t *current;
+	binary_tree_t *queue[1024];
+	int front = 0;
+	int rear = 0;
+	binary_tree_t *current;
 
-    if (!root)
-        return (NULL);
+	if (!root)
+	return (NULL);
+	
+	queue[rear++] = root;
 
-    queue[rear++] = root;
+	while (front < rear)
+	{
+		current = queue[front++];
 
-    while (front < rear)
-    {
-        current = queue[front++];
-
-        if (!current->left || !current->right)
-        {
-            if (!current->left)
-            {
-                current->left = new;
-                new->parent = current;
-                return (current);
-            }
+		if (!current->left || !current->right)
+		{
+			if (!current->left)
+			{
+				current->left = new;
+				new->parent = current;
+				return (current);
+			}
             else
-            {
-                current->right = new;
-                new->parent = current;
-                return (current);
-            }
-        }
-
-        if (current->left)
-            queue[rear++] = current->left;
-
-        if (current->right)
-            queue[rear++] = current->right;
+			{
+				current->right = new;
+				new->parent = current;
+				return (current);
+			}
+		}
+		
+		if (current->left)
+		queue[rear++] = current->left;
+		
+		if (current->right)
+		queue[rear++] = current->right;
     }
 
     return (NULL);
