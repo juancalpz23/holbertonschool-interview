@@ -1,6 +1,11 @@
 #!/usr/bin/python3
+"""
+Calculate the minimum number of operation to determine n H characters
+Using only Copy All and Paste
+"""
 
 def minOperations(n):
+
     """
     Calculate the minimum number of operations to achieve exactly n 'H' characters
     in a file using only 'Copy All' and 'Paste' operations
@@ -14,7 +19,7 @@ def minOperations(n):
         """
         Compute the minimum operations required to achieve x 'H' characters.
         """
-        
+
         if x == 1:
             return 0
         
