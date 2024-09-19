@@ -1,11 +1,20 @@
 #!/usr/bin/python3
 
 def minOperations(n):
+    """
+    Calculate the minimum number of operations to achieve exactly n 'H' characters
+    in a file using only 'Copy All' and 'Paste' operations
+    """
+
     if n <= 1:
         return 0
 
     # Function to compute the minimum operations for a given number of H's
     def compute_operations(x):
+        """
+        Compute the minimum operations required to achieve x 'H' characters.
+        """
+        
         if x == 1:
             return 0
         
