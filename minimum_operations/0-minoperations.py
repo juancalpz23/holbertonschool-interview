@@ -6,8 +6,8 @@
     Using only Copy All and Paste
 """
 
-def minOperations(n):
 
+def minOperations(n):
 
     """
         Calculate the minimum number of operations to achieve n H characters
