@@ -38,12 +38,12 @@ def minOperations(n):
                 min_ops = min(minOps, computeOperations(factor1) + factor2)
 
                 if factor1 != factor2:
-                    min_ops = min(minOps, computeOperations(factor2) + factor1)
+                    minOps = min(minOps, computeOperations(factor2) + factor1)
 
-        if min_ops == float('inf'):
-            min_ops = x
+        if minOps == float('inf'):
+            minOps = x
 
-        return min_ops
+        return minOps
 
     # Start computation from n
     return computeOperations(n)
