@@ -15,17 +15,14 @@ void sandpiles_sum(int grid1[3][3], int grid2[3][3]) {
         }
     }
 
-    // Print "=" before starting any toppling rounds
-    printf("=\n");
-
     // Check stability and apply toppling if necessary
     while (!is_stable(grid1)) {
+        printf("=\n"); // Print '=' before toppling
         print_grid(grid1);
-        printf("=\n"); // Print '=' after each grid output
         toppling(grid1);
     }
 
-    // Print the final stable grid, followed by an "=" sign
+    // Print the final stable grid without printing the '=' sign again
     print_grid(grid1);
 }
 
