@@ -1,81 +1,83 @@
 #!/usr/bin/python3
+from sys import argv
+
+
 """
-Log processing script that reads from stdin, computes and displays metrics.
+Parses a log of HTTP GET request results from stdin to tabulate the total
+counts of status codes appearing in each response, and the total file size
+across all requests
 """
 
-import sys
-import signal
 
-# Initialize metrics
-total_file_size = 0
-status_codes = {
-    200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0
-}
-line_count = 0
-
-
-def print_metrics():
+def print_log_totals(total_file_size, code_counts):
     """
-    Prints the total file size and status code metrics in ascending order.
+    Prints current totals of file size and status code counts.
     """
-    print(f"File size: {total_file_size}")
-    for code in sorted(status_codes.keys()):
-        if status_codes[code] > 0:
-            print(f"{code}: {status_codes[code]}")
+    print("File size: {}".format(total_file_size))
+    for code in code_counts:
+        if code_counts[code] > 0:
+            print("{}: {}".format(code, code_counts[code]))
 
 
-def signal_handler(sig, frame):
-    """
-    Signal handler that catches the keyboard interrupt (CTRL + C).
-    """
-    print_metrics()
-    sys.exit(0)
+if __name__ == '__main__':
+    from sys import stdin, stderr
+    from collections import OrderedDict
+    from datetime import datetime
 
+    line_no = 0
+    total_file_size = 0
+    code_counts = OrderedDict.fromkeys([200, 301, 400, 401, 403, 404, 405, 500], 0)
 
-# Register signal handler for SIGINT (CTRL + C)
-signal.signal(signal.SIGINT, signal_handler)
-
-
-# Main loop to read input lines
-for line in sys.stdin:
-    """
-    Continuously reads from stdin, processes each line, and updates metrics.
-    """
     try:
-        # Parse the line into components
-        parts = line.split()
-        if len(parts) < 9:
-            continue  # Skip line if it doesn't have enough parts
+        for line in stdin:
+            line_no += 1
 
-        # Extract relevant information from the line
-        ip_address = parts[0]
-        date = parts[3] + " " + parts[4]
-        request = parts[5] + " " + parts[6] + " " + parts[7]
-        status_code = parts[8]
-        file_size = parts[9]
+            # Split line to handle IP address and the rest of the data
+            a = line.split('-', 1)
+            if len(a) != 2:
+                # Likely not a formatted line
+                continue
 
-        # Validate the request format (only interested in specific GET request)
-        if request != '"GET /projects/260 HTTP/1.1"':
-            continue
+            # Extracting timestamp and request
+            b = a[1].split(']')
+            timecode = b[0].lstrip(' [')
+            try:
+                datetime.strptime(timecode, '%Y-%m-%d %H:%M:%S.%f')
+            except ValueError:
+                stderr.write("{}: {}: invalid timecode\n".format(argv[0], line_no))
+                continue  # Skip line if timecode is invalid
 
-        # Update total file size by converting file_size to an integer
-        total_file_size += int(file_size)
+            # Extracting URL request
+            c = b[1].split('"')
+            c = c[1:]  # We expect the second element to be the GET request
+            if c[0] != 'GET /projects/260 HTTP/1.1':
+                stderr.write("{}: {}: unexpected HTTP request\n".format(argv[0], line_no))
+                continue  # Skip line if the request is not as expected
 
-        # Update status code count if it's a valid integer
-        if status_code.isdigit():
-            status_code = int(status_code)
-            if status_code in status_codes:
-                status_codes[status_code] += 1
+            # Extract status code and file size
+            d = c[1].strip().split(' ')
 
-        line_count += 1
+            # Process status code
+            if d[0].isdigit():
+                code = int(d[0])
+                if code in code_counts:
+                    code_counts[code] += 1
+                else:
+                    stderr.write("{}: {}: invalid status code {}\n".format(argv[0], line_no, code))
 
-        # Print metrics after every 10 lines
-        if line_count % 10 == 0:
-            print_metrics()
+            # Process file size
+            if d[1].isdigit():
+                total_file_size += int(d[1])
+            else:
+                stderr.write("{}: {}: invalid file size {}\n".format(argv[0], line_no, d[1]))
 
-    except Exception as e:
-        # If an exception occurs (like conversion errors), skip the line
-        continue
+            # Print totals every 10 lines
+            if line_no % 10 == 0:
+                print_log_totals(total_file_size, code_counts)
 
-# Final print (if the program ends without interruption)
-print_metrics()
+        # Final totals after loop completes
+        print_log_totals(total_file_size, code_counts)
+
+    except KeyboardInterrupt:
+        print_log_totals(total_file_size, code_counts)
+        raise
