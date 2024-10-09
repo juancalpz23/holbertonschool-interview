@@ -1,13 +1,12 @@
 #!/usr/bin/python3
-from sys import argv
-
-
 """
 Parses a log of HTTP GET request results from stdin to tabulate the total
 counts of status codes appearing in each response, and the total file size
 across all requests
 """
 
+
+from sys import argv
 
 def print_log_totals(total_file_size, code_counts):
     """
