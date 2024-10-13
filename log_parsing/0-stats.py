@@ -1,6 +1,23 @@
 #!/usr/bin/python3
 """
 Log Parsing Script
+
+This script reads log entries from stdin line by line and computes metrics:
+- Total file size from all log entries
+- Count of HTTP status codes (200, 301, 400, 401, 403, 404, 405, 500)
+
+After every 10 lines of input or upon receiving a keyboard
+interrupt (Ctrl + C),
+it prints the following statistics:
+- Total file size: the sum of all file sizes from the log entries
+- Number of lines per status code: only valid status codes are counted and
+  printed in ascending order.
+
+Input format expected for each log entry:
+<IP Address> - [<date>] "GET /projects/260 HTTP/1.1" <status code> <file size>
+
+Example usage:
+$ ./0-generator.py | ./0-stats.py
 """
 
 import sys
@@ -8,8 +25,13 @@ import sys
 
 def print_stats(file_size, status_counts):
     """
-    Prints the current statistics including total file
-    size and status code counts
+    Prints the current statistics including total
+    file size and status code counts.
+
+    Args:
+        file_size (int): The total size of all the files processed so far.
+        status_counts (dict): A dictionary with the count
+        of each valid status code.
     """
     print(f"File size: {file_size}")
     for code in sorted(status_counts):
@@ -32,8 +54,8 @@ try:
         # Split the line into parts based on spaces
         parts = line.split()
 
-        # Ensure the line has the correct number of parts
-        # (>=7 for valid entries)
+        # Ensure the line has the correct
+        # number of parts (>=7 for valid entries)
         if len(parts) >= 7:
             try:
                 # Extract the file size and status code from the log entry
@@ -42,8 +64,8 @@ try:
                 # Status code is the second-to-last part
                 status_code = int(parts[-2])
 
-                # Update the count for the status code if
-                # it's one of the valid codes
+                # Update the count for the status code
+                # if it's one of the valid codes
                 if status_code in status_counts:
                     status_counts[status_code] += 1
             except ValueError:
