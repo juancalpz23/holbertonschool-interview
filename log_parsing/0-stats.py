@@ -9,7 +9,7 @@ import sys
 def print_stats(file_size, status_counts):
     """
     Prints the current statistics including total file
-    size and status code counts.
+    size and status code counts
     """
     print(f"File size: {file_size}")
     for code in sorted(status_counts):
