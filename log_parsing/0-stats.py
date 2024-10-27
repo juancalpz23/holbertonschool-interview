@@ -1,42 +1,39 @@
 #!/usr/bin/python3
-""" doc """
-
+"""Module for log parsing script."""
 import sys
 
+if __name__ == "__main__":
+    size = [0]
+    codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
 
-def print_stats(file_size, status_counts):
-    """ doc """
-    print(f"File size: {file_size}")
-    for code in sorted(status_counts):
-        if status_counts[code] > 0:
-            print(f"{code}: {status_counts[code]}")
+    def check_match(line):
+        """Checks for matching log line and updates metrics."""
+        try:
+            line = line.strip()
+            words = line.split(" ")
+            size[0] += int(words[-1])
+            code = int(words[-2])
+            if code in codes:
+                codes[code] += 1
+        except (ValueError, IndexError):
+            pass
 
-file_size = 0
-status_counts = {200: 0, 301: 0, 400: 0,
-                 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-line_count = 0
+    def print_stats():
+        """Prints accumulated statistics."""
+        print("File size: {}".format(size[0]))
+        for k in sorted(codes.keys()):
+            if codes[k]:
+                print("{}: {}".format(k, codes[k]))
 
-try:
-    for line in sys.stdin:
-        line_count += 1
+    i = 1
+    try:
+        for line in sys.stdin:
+            check_match(line)
+            if i % 10 == 0:
+                print_stats()
+            i += 1
+    except KeyboardInterrupt:
+        print_stats()
+        sys.exit(0)
 
-        parts = line.split()
-
-        if len(parts) >= 7:
-            try:
-                file_size += int(parts[-1])
-                status_code = int(parts[-2])
-
-                if status_code in status_counts:
-                    status_counts[status_code] += 1
-            except ValueError:
-                pass
-
-        if line_count % 10 == 0:
-            print_stats(file_size, status_counts)
-
-except KeyboardInterrupt:
-    print_stats(file_size, status_counts)
-    raise
-
-print_stats(file_size, status_counts)
+    print_stats()
