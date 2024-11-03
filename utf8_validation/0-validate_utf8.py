@@ -5,6 +5,7 @@ UTF-8 Validation module
 
 from typing import List
 
+
 def validUTF8(data: List[int]) -> bool:
     """
     Determines if a given data set represents a valid UTF-8 encoding.
@@ -28,7 +29,7 @@ def validUTF8(data: List[int]) -> bool:
             if n_bytes == 0:
                 continue
 
-            # Invalid cases: n_bytes should be 2, 3, or 4 for multi-byte characters
+            # Invalid cases: n_bytes should be 2, 3, or 4
             if n_bytes == 1 or n_bytes > 4:
                 return False
         else:
