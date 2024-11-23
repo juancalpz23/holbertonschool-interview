@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 """
-N-Queens problem solver.
+N-Queens problem solver
 
 This module solves the N-Queens problem using backtracking and prints
-all possible solutions for a given `N` (size of the chessboard).
+all possible solutions for a given `N` (size of the chessboard)
 
 Usage:
     ./0-nqueens.py N
 
 Where:
-    N must be an integer greater than or equal to 4.
+    N must be an integer greater than or equal to 4
 """
 
 import sys
@@ -17,16 +17,16 @@ import sys
 
 def is_safe(board, row, col, n):
     """
-    Check if it's safe to place a queen at board[row][col].
+    Check if it's safe to place a queen at board[row][col]
 
     Args:
-        board (list of list of int): The chessboard.
-        row (int): The row index to check.
-        col (int): The column index to check.
-        n (int): The size of the chessboard.
+        board (list of list of int): The chessboard
+        row (int): The row index to check
+        col (int): The column index to check
+        n (int): The size of the chessboard
 
     Returns:
-        bool: True if it's safe to place a queen, False otherwise.
+        bool: True if it's safe to place a queen, False otherwise
     """
     # Check this row on the left side
     for i in range(col):
@@ -48,13 +48,13 @@ def is_safe(board, row, col, n):
 
 def solve_nqueens_util(board, col, n, solutions):
     """
-    Recursively solve the N-Queens problem.
+    Recursively solve the N-Queens problem
 
     Args:
-        board (list of list of int): The chessboard.
-        col (int): The current column to place a queen.
-        n (int): The size of the chessboard.
-        solutions (list of list of list of int): List to store all solutions.
+        board (list of list of int): The chessboard
+        col (int): The current column to place a queen
+        n (int): The size of the chessboard
+        solutions (list of list of list of int): List to store all solutions
     """
     if col >= n:
         # Save the current solution in the required format
@@ -75,10 +75,10 @@ def solve_nqueens_util(board, col, n, solutions):
 
 def solve_nqueens(n):
     """
-    Solve the N-Queens problem and print all solutions.
+    Solve the N-Queens problem and print all solutions
 
     Args:
-        n (int): The size of the chessboard.
+        n (int): The size of the chessboard
     """
     board = [[0] * n for _ in range(n)]
     solutions = []
