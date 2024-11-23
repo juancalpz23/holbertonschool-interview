@@ -3,7 +3,7 @@
 N-Queens problem solver
 
 This module solves the N-Queens problem using backtracking and prints
-all possible solutions for a given `N` (size of the chessboard)
+all possible solutions for a given `N` (size of the chessboard).
 
 Usage:
     ./0-nqueens.py N
